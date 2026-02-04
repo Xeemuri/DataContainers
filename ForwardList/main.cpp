@@ -50,7 +50,10 @@ public:
 	}
 	void push_back(int Data)
 	{
+		//1) Создаем добавляемый элемент:
 		Element* New = new Element(Data);
+
+		//2) Проверяем есть ли начало в списке
 		if (Head == nullptr) Head = New;
 		else
 		{
@@ -58,6 +61,45 @@ public:
 			while (Temp->pNext) Temp = Temp->pNext;
 			Temp->pNext = New;
 		}
+
+	}
+
+	//					Removing elements:
+	void pop_front()
+	{
+		//1) Запоминаем адрес удаляемого элемента
+		Element* Erased = Head;
+		Head = Head->pNext;
+
+		//3) Удаляем стираемый элемент из памяти:
+		delete Erased;
+	}
+
+	void pop_back()
+	{
+		//1) Доходим до конца списка:
+		Element* Temp = Head;
+		while (Temp->pNext->pNext) Temp = Temp->pNext;
+
+		//2)Удаляем стираемый элемент:
+		delete Temp->pNext;
+
+		Temp->pNext = nullptr;
+	}
+
+	void insert(int Data, int Index)
+	{
+		if (Index <= 0) return push_front(Data);
+		Element* New = new Element(Data);
+
+		Element* Temp = Head;
+		for (int i = 0; i < Index - 1; i++)
+		{
+			if (Temp->pNext == nullptr) break;
+			Temp = Temp->pNext;
+		}
+		New->pNext = Temp->pNext;
+		Temp->pNext = New;
 
 	}
 
@@ -82,8 +124,14 @@ void main()
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 	{
-		list.push_front(rand() % 100);
+		list.push_back(rand() % 100);
 	}
-	list.push_back(123);
+	list.print();
+	//list.pop_front();
+	//list.pop_back();
+	int index, value;
+	cout << "Введите индекс добавляемого элемента: "; cin >> index;
+	cout << "Введите значение добавляемого элемента: "; cin >> value;
+	list.insert(value,index);
 	list.print();
 }
