@@ -36,13 +36,14 @@ public:
 		//Конструктор по умолчанию создает пустой список
 		Head = nullptr;
 		//Когда список пуст, его Голова указывает на 0.
+		size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
-	ForwardList(int size)
+	explicit ForwardList(int size) : ForwardList()
 	{
 		for (int i = 0; i < size; i++)
 		{
-			this->push_back(NULL);
+			this->push_front(0);
 		}
 	}
 	~ForwardList()
@@ -131,7 +132,10 @@ public:
 			if (Temp->pNext->pNext == nullptr) break;
 			Temp = Temp->pNext;
 		}
+		Element* Erased = Temp->pNext;
 		Temp->pNext = Temp->pNext->pNext;
+		delete Erased;
+		size--;
 	}
 	//				Methods:
 	void print() const
@@ -149,24 +153,14 @@ public:
 
 	int get_size() const
 	{
-		Element* Temp = Head;
-		int size = 0;
-		while (Temp)
-		{
-			size++;
-			Temp = Temp->pNext;
-		}
 		return size;
 	}
 
 	//				Operators override:
-	int& operator[](int index)
+	int& operator[](int index)const
 	{
 		Element* Temp = Head;
-		for (int i = 0; i < index; i++)
-		{
-			Temp = Temp->pNext;
-		}
+		for (int i = 0; i < index; i++) Temp = Temp->pNext;
 		return Temp->Data;
 	}
 };
@@ -220,11 +214,13 @@ void main()
 #ifdef HOMEWORK1
 
 	ForwardList list(5);
+	list.print();
 	for (int i = 0; i < list.get_size(); i++)
 	{
 		list[i] = rand() % 100;
 	}
-
+	list.erase(2);
+	list.insert(10,2);
 	for (int i = 0; i < list.get_size(); i++)
 	{
 		cout << list[i] << tab;
