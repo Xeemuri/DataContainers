@@ -175,13 +175,15 @@ public:
 			push_back(Temp->Data);
 		return *this;
 	}
+
 	int& operator[](int index)const
 	{
 		Element* Temp = Head;
 		for (int i = 0; i < index; i++) Temp = Temp->pNext;
 		return Temp->Data;
 	}
-	ForwardList& operator+(const ForwardList& other)
+
+	ForwardList& operator+(const ForwardList& other) const
 	{
 		ForwardList* newList = new ForwardList();
 		/*Element* Temp = this->Head;*/
@@ -267,9 +269,8 @@ void main()
 
 	ForwardList list2;
 	list2 = list1;
-	ForwardList list3;
-	list3 = list1 + list2;
+	ForwardList list3 = list1 + list2;
 	//list3.print();
 	//list1.print();]
-	list2.print();
+	list3.print();
 }
