@@ -28,6 +28,7 @@ public:
 		count--;
 	}
 	friend class ForwardList;
+	friend ForwardList operator+ (const ForwardList& left, const ForwardList& right);
 };
 int Element::count = 0;
 
@@ -56,9 +57,16 @@ public:
 	}
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
+		//Deep copy
 		*this = other;
 		reverse();
 		cout << "LCopyConstructor:\t" << this << endl;
+	}
+	ForwardList(ForwardList&& other) :ForwardList()
+	{
+		//Shallow copy
+		*this = std::move(other);
+		cout << "LMoveConstructor:\t" << this << endl;
 	}
 	~ForwardList()
 	{
@@ -180,6 +188,10 @@ public:
 		cout << "Общее количество элементов: " << Element::count << endl;
 	}
 
+	Element* get_head()const
+	{
+		return Head;
+	}
 	int get_size() const
 	{
 		return size;
@@ -196,6 +208,17 @@ public:
 		cout << "LCopyAssignment:\t" << this << endl;
 		return *this;
 	}
+	ForwardList& operator=(ForwardList&& other)
+	{
+		if (this == &other) return *this;
+		while (Head)pop_front();
+		this->Head = other.Head;
+		this->size = other.size;
+		other.Head = nullptr;
+		other.size = 0;
+		cout << "LMoveAssignment:\t" << this << endl;
+		return *this;
+	}
 
 	int& operator[](int index)const
 	{
@@ -204,24 +227,32 @@ public:
 		return Temp->Data;
 	}
 
-	ForwardList operator+(const ForwardList& other) const
-	{
-		ForwardList newList;// = new ForwardList();
-		/*Element* Temp = this->Head;*/
-		for (Element* Temp = this->Head; Temp; Temp = Temp->pNext)
-			newList.push_back(Temp->Data);
+	//ForwardList operator+(const ForwardList& other) const
+	//{
+	//	ForwardList newList;// = new ForwardList();
+	//	/*Element* Temp = this->Head;*/
+	//	for (Element* Temp = this->Head; Temp; Temp = Temp->pNext)
+	//		newList.push_back(Temp->Data);
 
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			newList.push_back(Temp->Data);
-		return newList;
-	}
+	//	for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+	//		newList.push_back(Temp->Data);
+	//	return newList;
+	//}
 };
+
+ForwardList operator+ (const ForwardList& left, const ForwardList& right)
+{
+	ForwardList result = left;
+	for (Element* Temp = right.get_head(); Temp; Temp = Temp->pNext)
+		result.push_back(Temp->Data);
+	return result;
+}
 
 //#define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
 //#define COPY_SEMANTIC_CHECK
-#define PERFORMANCE_CHECK
+//#define PERFORMANCE_CHECK
 
 void main()
 {
@@ -319,5 +350,19 @@ void main()
 	list2.print();
 	cout << delimeter << endl;
 #endif // PERFORMANCE_CHECK
+	
+	ForwardList list1;
+	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
+	list1.push_back(13);
+	list1.push_back(21);
 
+	ForwardList list2;
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+
+	ForwardList list3 = list1 + list2;
+	list3.print();
 }
