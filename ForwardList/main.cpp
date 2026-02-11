@@ -45,9 +45,16 @@ public:
 		{
 			this->push_front(0);
 		}
+		cout << "LCopyConstructor:\t" << this << endl;
+	}
+	ForwardList(const ForwardList& other) :ForwardList()
+	{
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
 	}
 	~ForwardList()
 	{
+		while (Head)pop_front();
 		cout << "Ldestructor:\t" << this << endl;
 	}
 
@@ -55,36 +62,34 @@ public:
 	void push_front(int Data)
 	{
 		//1) Создаем добавляемый элемент:
-		Element* New = new Element(Data);
+		//Element* New = new Element(Data);
 
 		//2)Стыкуем новый элемент к началу списка
-		New->pNext = Head;
+		//New->pNext = Head;
 
 		//3)Смещаем голову на новый элемент
-		Head = New;
+		Head = new Element(Data, Head);
 		size++;
 	}
 
 	void push_back(int Data)
 	{
+		if (Head == nullptr)return push_front(Data);
 		//1) Создаем добавляемый элемент:
-		Element* New = new Element(Data);
+		//Element* New = new Element(Data);
 
 		//2) Проверяем есть ли начало в списке
-		if (Head == nullptr) Head = New;
-		else
-		{
-			Element* Temp = Head;
-			while (Temp->pNext) Temp = Temp->pNext;
-			Temp->pNext = New;
-		}
+
+		Element* Temp = Head;
+		while (Temp->pNext) Temp = Temp->pNext;
+		Temp->pNext = new Element(Data);
 		size++;
 	}
 
 	void insert(int Data, int Index)
 	{
 		if (Index <= 0) return push_front(Data);
-		Element* New = new Element(Data);
+		//Element* New = new Element(Data);
 
 		Element* Temp = Head;
 		for (int i = 0; i < Index - 1; i++)
@@ -92,8 +97,10 @@ public:
 			if (Temp->pNext == nullptr) break;
 			Temp = Temp->pNext;
 		}
-		New->pNext = Temp->pNext;
-		Temp->pNext = New;
+		//New->pNext = Temp->pNext;
+		//Temp->pNext = New;
+
+		Temp->pNext = new Element(Data, Temp->pNext);
 		size++;
 	}
 
@@ -125,9 +132,9 @@ public:
 	void erase(int Index)
 	{
 		if (Index <= 0) return pop_front();
-		
+
 		Element* Temp = Head;
-		for (int i = 0; i < Index-1; i++)
+		for (int i = 0; i < Index - 1; i++)
 		{
 			if (Temp->pNext->pNext == nullptr) break;
 			Temp = Temp->pNext;
@@ -140,13 +147,15 @@ public:
 	//				Methods:
 	void print() const
 	{
-		Element* Temp = Head; //Temp - это итератор.
-		//Итератор - указатель, при помощи которого можно перемещаться по элементам структуры данных.
-		while (Temp)
-		{
+		//Element* Temp = Head; //Temp - это итератор.
+		////Итератор - указатель, при помощи которого можно перемещаться по элементам структуры данных.
+		//while (Temp)
+		//{
+		//	cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+		//	Temp = Temp->pNext;
+		//}
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-			Temp = Temp->pNext;
-		}
 		cout << "Количество элементов в списке: " << size << endl;
 		cout << "Общее количество элементов: " << Element::count << endl;
 	}
@@ -157,17 +166,37 @@ public:
 	}
 
 	//				Operators override:
+
+	ForwardList& operator=(const ForwardList& other)
+	{
+		if (this == &other) return *this;
+		while (Head)pop_front();
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
+		return *this;
+	}
 	int& operator[](int index)const
 	{
 		Element* Temp = Head;
 		for (int i = 0; i < index; i++) Temp = Temp->pNext;
 		return Temp->Data;
 	}
+	ForwardList& operator+(const ForwardList& other)
+	{
+		ForwardList* newList = new ForwardList();
+		/*Element* Temp = this->Head;*/
+		for (Element* Temp = this->Head; Temp; Temp = Temp->pNext)
+			newList->push_back(Temp->Data);
+	
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			newList->push_back(Temp->Data);
+		return *newList;
+	}
 };
 
 //#define BASE_CHECK
 //#define SIZE_CHECK
-#define HOMEWORK1
+//#define HOMEWORK1
 
 void main()
 {
@@ -220,12 +249,27 @@ void main()
 		list[i] = rand() % 100;
 	}
 	list.erase(2);
-	list.insert(10,2);
+	list.insert(10, 2);
 	for (int i = 0; i < list.get_size(); i++)
 	{
 		cout << list[i] << tab;
 	}
 	cout << endl;
 #endif // HOMEWORK1
+	ForwardList list1;
+	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
+	list1.push_back(13);
+	list1.push_back(21);
+	list1 = list1;
+	list1.print();
 
+	ForwardList list2;
+	list2 = list1;
+	ForwardList list3;
+	list3 = list1 + list2;
+	//list3.print();
+	//list1.print();]
+	list2.print();
 }
