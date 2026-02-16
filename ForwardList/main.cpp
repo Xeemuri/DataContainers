@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <ctime>
+#include <vector>
 using namespace std;
 
 #define tab '\t'
@@ -55,6 +56,13 @@ public:
 		}
 		cout << "1argConstructor:\t" << this << endl;
 	}
+	ForwardList(std::initializer_list<int> il) :ForwardList()
+	{
+		for (int const* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
+	}
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
 		//Deep copy
@@ -68,6 +76,7 @@ public:
 		*this = std::move(other);
 		cout << "LMoveConstructor:\t" << this << endl;
 	}
+
 	~ForwardList()
 	{
 		while (Head)pop_front();
@@ -253,6 +262,8 @@ ForwardList operator+ (const ForwardList& left, const ForwardList& right)
 //#define HOMEWORK1
 //#define COPY_SEMANTIC_CHECK
 //#define PERFORMANCE_CHECK
+//#define MOVE_SEMANTIC_CHECK
+//#define RANGE_BASED_FOR_ARRAY
 
 void main()
 {
@@ -339,7 +350,7 @@ void main()
 	}
 	clock_t end = clock();
 	cout << delimeter << endl;
-	cout << "list1 заполнен за " <<double(end-start)/CLOCKS_PER_SEC << endl;
+	cout << "list1 заполнен за " << double(end - start) / CLOCKS_PER_SEC << endl;
 	list1.print();
 	cout << delimeter << endl;
 	start = clock();
@@ -350,7 +361,8 @@ void main()
 	list2.print();
 	cout << delimeter << endl;
 #endif // PERFORMANCE_CHECK
-	
+
+#ifdef MOVE_SEMANTIC_CHECK
 	ForwardList list1;
 	list1.push_back(3);
 	list1.push_back(5);
@@ -365,4 +377,23 @@ void main()
 
 	ForwardList list3 = list1 + list2;
 	list3.print();
+#endif // MOVE_SEMANTIC_CHECK
+#ifdef RANGE_BASED_FOR_ARRAY
+	int arr[] = { 3,5,8,13,21 };
+	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	{
+		cout << arr[i] << tab;
+	}
+	//ForwardList list = {3, 5,8};
+	//list.print();
+
+	for (int i : arr)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+#endif // RANGE_BASED_FOR_ARRAY
+
+	ForwardList list = { 3,5,8,13,21 };
+	list.print();
 }
