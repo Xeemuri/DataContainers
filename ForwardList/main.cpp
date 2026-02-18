@@ -46,11 +46,13 @@ public:
 	{
 		cout << "ItDestructor:\t" << this << endl;
 	}
-	Iterator operator++()
+	Iterator& operator++()
 	{
-		Iterator old = *this;
+		/*Iterator old = *this;
 		if (Temp) Temp = Temp->pNext;
-		return old;
+		return old;*/
+		Temp = Temp->pNext;
+		return *this;
 	}
 	bool operator!=(const Iterator& other)
 	{
