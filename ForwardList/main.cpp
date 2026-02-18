@@ -29,15 +29,57 @@ public:
 		count--;
 	}
 	friend class ForwardList;
+	friend class Iterator;
 	friend ForwardList operator+ (const ForwardList& left, const ForwardList& right);
 };
 int Element::count = 0;
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	Iterator operator++()
+	{
+		Iterator old = *this;
+		if (Temp) Temp = Temp->pNext;
+		return old;
+	}
+	bool operator!=(const Iterator& other)
+	{
+		 return this->Temp == other.Temp ? false : true;
+	}
+	int operator*() const
+	{
+		return Temp->Data;
+	}
+	operator int()
+	{
+		return Temp->Data;
+	}
+};
 
 class ForwardList
 {
 	Element* Head; // Голова списка - является точкой входа в список
 	int size;
 public:
+
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
 
 	//				Constructors, Destructor:
 	ForwardList()
@@ -56,7 +98,7 @@ public:
 		}
 		cout << "1argConstructor:\t" << this << endl;
 	}
-	ForwardList(std::initializer_list<int> il) :ForwardList()
+	ForwardList(const std::initializer_list<int> &il) :ForwardList()
 	{
 		for (int const* it = il.begin(); it != il.end(); it++)
 		{
@@ -395,5 +437,10 @@ void main()
 #endif // RANGE_BASED_FOR_ARRAY
 
 	ForwardList list = { 3,5,8,13,21 };
-	list.print();
+	//list.print();
+	for (int i : list)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
 }
