@@ -1,6 +1,5 @@
 ﻿#include <iostream>
 #include <ctime>
-#include <vector>
 using namespace std;
 
 #define tab '\t'
@@ -334,13 +333,13 @@ ForwardList operator+ (const ForwardList& left, const ForwardList& right)
 	ForwardList result = left;
 	for (ConstIterator it = right.begin(); it != right.end(); ++it)
 	{
-		*it *= 100;
+		//*it *= 100;
 		result.push_back(*it);
 	}
 	return result;
 }
 
-//#define BASE_CHECK
+#define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
 //#define COPY_SEMANTIC_CHECK
@@ -348,6 +347,7 @@ ForwardList operator+ (const ForwardList& left, const ForwardList& right)
 //#define MOVE_SEMANTIC_CHECK
 //#define RANGE_BASED_FOR_ARRAY
 //#define RANGE_BASED_FOR_LIST
+//#DEFINE ITERATORS_CHECK
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -355,10 +355,10 @@ void main()
 #ifdef BASE_CHECK
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
-	ForwardList list;
+	ForwardList list(n);
 	for (int i = 0; i < n; i++)
 	{
-		list.push_back(rand() % 100);
+		list.push_front(rand() % 100);
 	}
 	list.print();
 	//list.pop_front();
@@ -492,10 +492,13 @@ void main()
 	cout << endl;
 #endif // RANGE_BASED_FOR_LIST
 
-	ForwardList list1= { 3,5,8,13,21 };
+#ifdef ITERATORS_CHECK
+	ForwardList list1 = { 3,5,8,13,21 };
 	ForwardList list2 = { 34,55,89 };
 	ForwardList list3 = list1 + list2;
 	for (int i : list1) cout << i << tab; cout << endl;
 	for (int i : list2) cout << i << tab; cout << endl;
 	for (int i : list3) cout << i << tab; cout << endl;
+#endif // ITERATORS_CHECK
+
 }
