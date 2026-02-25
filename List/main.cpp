@@ -1,5 +1,4 @@
 #include <iostream>
-#include <ctime>
 using namespace std;
 
 #define tab '\t'
@@ -107,6 +106,8 @@ public:
 		return Temp->Data;
 	}
 };
+
+
 class List
 {
 	Element* Head;
