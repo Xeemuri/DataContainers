@@ -34,6 +34,13 @@ public:
 		size = 0;
 		cout << "LConstructor:\t" <<this << endl;
 	}
+	List(const std::initializer_list<int>& il) :List()
+	{
+		for (int const* it = il.begin(); it != il.end(); ++it)
+		{
+			push_back(*it);
+		}
+	}
 	~List()
 	{
 		while (Head) pop_back();
@@ -180,5 +187,6 @@ int main()
 	list.print();
 	list.reverse_print();
 #endif // BASE_CHECK
-
+	List list = { 3,5,8,13 };
+	list.print();
 }
