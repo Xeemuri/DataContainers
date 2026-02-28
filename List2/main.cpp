@@ -3,6 +3,8 @@ using namespace std;
 
 #define tab '\t'
 #define delimeter "\n-----------------------\n"
+class Iterator;
+class ConstIterator;
 
 class List
 {
@@ -22,12 +24,20 @@ class List
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class List;
+		friend class Iterator;
+		friend class ConstIterator;
 	}*Head,*Tail;//Экземпляры классса можно объявлять непосредственно после описания класса
 	//Одним выражением можно объявить несколько переменных одного типа, один раз указав тип данных
 	// и перечислив имена объявляемых переменных через запятую.
 	size_t size;//size_t - это typedef на 'unsigned int'.
 
 public:
+
+	Iterator begin();
+	Iterator end();
+	ConstIterator begin()const;
+	ConstIterator end()const;
+
 	List()
 	{
 		Head = Tail = nullptr;
@@ -158,8 +168,90 @@ public:
 		cout << "Head:\t" << Head << endl;
 		cout << "Количество элементов в списке: " << size << endl;
 	}
-
+	friend class Iterator;
+	friend class ConstIterator;
 };
+
+
+class Iterator
+{
+	List::Element* Temp;
+public:
+	Iterator(List::Element* Temp = nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	Iterator operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}
+	bool operator==(const Iterator& other) const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const Iterator& other) const
+	{
+		return this->Temp != other.Temp;
+	}
+	int& operator*()
+	{
+		return Temp->Data;
+	}
+};
+
+class ConstIterator
+{
+	List::Element* Temp;
+public:
+	ConstIterator(List::Element* Temp = nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~ConstIterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	ConstIterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	ConstIterator operator++(int)
+	{
+		ConstIterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}
+	bool operator==(const ConstIterator& other) const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const ConstIterator& other) const
+	{
+		return this->Temp != other.Temp;
+	}
+	int operator*() const
+	{
+		return Temp->Data;
+	}
+};
+
+Iterator List::begin() { return Head; }
+Iterator List:: end() { return nullptr; }
+ConstIterator List::begin()const { return Head; }
+ConstIterator List::end()const { return nullptr; }
+
 
 //#define BASE_CHECK
 
@@ -187,6 +279,8 @@ int main()
 	list.print();
 	list.reverse_print();
 #endif // BASE_CHECK
-	List list = { 3,5,8,13 };
+	List list = { 3,5,8,13, 21 };
+	for (int i : list)cout << i << tab;
+
 	list.print();
 }
