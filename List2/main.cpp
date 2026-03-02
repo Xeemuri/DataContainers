@@ -117,6 +117,7 @@ public:
 	};
 	class ReverseIterator : public ConstReverseIterator
 	{
+	public:
 		ReverseIterator(Element* Temp) : ConstReverseIterator(Temp) {}
 		~ReverseIterator() {}
 		int& operator* ()
