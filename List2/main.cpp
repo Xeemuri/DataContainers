@@ -15,11 +15,17 @@ class List
 		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr) :
 			Data(Data), pNext(pNext), pPrev(pPrev)
 		{
+#ifdef DEBUG
 			cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		~Element()
 		{
+#ifdef DEBUG
 			cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		friend class List;
 	}*Head, * Tail;//Экземпляры классса можно объявлять непосредственно после описания класса
@@ -325,20 +331,23 @@ int main()
 #endif // BASE_CHECK
 
 	List<int> iList = { 3,5,8,13,21 };
-	for (int i : iList) cout << i << tab;
-	cout << endl;
+	for (int i : iList) cout << i << tab; cout << endl;
+	for (List<int>::ReverseIterator it = iList.rbegin(); it != iList.rend(); ++it)
+		cout << *it << tab; cout << endl;
 
 	List<double> dList = { 3.5, 21.4, 41.2, 67.69, 0.22 };
-	for (double i : dList) cout << i << tab;
-	cout << endl;
+	for (double i : dList) cout << i << tab; cout << endl;
+	for (List<double>::ReverseIterator it = dList.rbegin(); it != dList.rend(); ++it)
+		cout << *it << tab; cout << endl;
 
 	List<char> cList = { 'a','b','c','d','z' };
 	for (char i : cList) cout << i << tab;
 	cout << endl;
 
-	List<char*> szList = { "Hello","World", "!"};
-	for (char* i : szList)cout << i << tab;
-
+	List<std::string> sList = { "Хорошо","живет", "на", "свете", "Винни", "Пух"};
+	for (std::string i : sList)cout << i << tab; cout << endl;
+	for (List<std::string>::ReverseIterator it = sList.rbegin(); it != sList.rend(); ++it)
+		cout << *it << tab; cout << endl;
 	//for (List<int>::Iterator it = list.begin(); it != list.end(); it++)
 	//{
 	//	*it *= 100;
@@ -350,6 +359,5 @@ int main()
 	//{
 	//	cout << *it << tab;
 	//}
-	cout << endl;
 
 }
