@@ -1,10 +1,11 @@
 ﻿#include <iostream>
-#include <ctime>
+using std::cout;
 using namespace std;
 
 #define tab '\t'
 #define delimeter "\n-----------------------\n"
-
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////		Class declaration (Объявление класса)				/////////////
 template<typename T> class ForwardList;
 template<typename T> class Iterator;
 template<typename T> class ConstIterator;
@@ -42,73 +43,25 @@ template<typename T> class Iterator
 {
 	Element<T>* Temp;
 public:
-	Iterator(Element<T>* Temp = nullptr) :Temp(Temp)
-	{
-		cout << "ItConstructor:\t" << this << endl;
-	}
-	~Iterator()
-	{
-		cout << "ItDestructor:\t" << this << endl;
-	}
-	Iterator& operator++()
-	{
-		Temp = Temp->pNext;
-		return *this;
-	}
-	Iterator operator++(int)
-	{
-		Iterator<T> old = *this;
-		Temp = Temp->pNext;
-		return old;
-	}
-	bool operator==(const Iterator<T>& other) const
-	{
-		return this->Temp == other.Temp;
-	}
-	bool operator!=(const Iterator<T>& other) const
-	{
-		return this->Temp != other.Temp;
-	}
-	T& operator*()
-	{
-		return Temp->Data;
-	}
+	Iterator(Element<T>* Temp = nullptr);
+	~Iterator();
+	Iterator& operator++();
+	Iterator operator++(int);
+	bool operator==(const Iterator<T>& other) const;
+	bool operator!=(const Iterator<T>& other) const;
+	T& operator*();
 };
 template<typename T> class ConstIterator
 {
 	Element<T>* Temp;
 public:
-	ConstIterator(Element<T>* Temp = nullptr) :Temp(Temp)
-	{
-		cout << "ItConstructor:\t" << this << endl;
-	}
-	~ConstIterator()
-	{
-		cout << "ItDestructor:\t" << this << endl;
-	}
-	ConstIterator<T>& operator++()
-	{
-		Temp = Temp->pNext;
-		return *this;
-	}
-	ConstIterator<T> operator++(int)
-	{
-		ConstIterator<T> old = *this;
-		Temp = Temp->pNext;
-		return old;
-	}
-	bool operator==(const ConstIterator<T>& other) const
-	{
-		return this->Temp == other.Temp;
-	}
-	bool operator!=(const ConstIterator<T>& other) const
-	{
-		return this->Temp != other.Temp;
-	}
-	T operator*() const
-	{
-		return Temp->Data;
-	}
+	ConstIterator(Element<T>* Temp = nullptr);
+	~ConstIterator();
+	ConstIterator<T>& operator++();
+	ConstIterator<T> operator++(int);
+	bool operator==(const ConstIterator<T>& other) const;
+	bool operator!=(const ConstIterator<T>& other) const;
+	T operator*() const;
 };
 
 template<typename T> class ForwardList
@@ -157,6 +110,90 @@ public:
 	void reverse();
 	void print() const;
 };
+/////////////		Class declaration end (Объявление класса)			/////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+///-------------------------------------------------------------------------------///
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////		Class definition (Определение класса)				/////////////
+
+//---------------------------------------------------------------------------------//
+//---------				Iterator methods							---------------//
+template<typename T>Iterator<T>::Iterator(Element<T>* Temp) :Temp(Temp)
+{
+	cout << "ItConstructor:\t" << this << endl;
+}
+template<typename T>Iterator<T>::~Iterator()
+{
+	cout << "ItDestructor:\t" << this << endl;
+}
+template <typename T> Iterator<T> & Iterator<T>::operator++()
+{
+	Temp = Temp->pNext;
+	return *this;
+}
+template <typename T> Iterator<T> Iterator<T>::operator++(int)
+{
+	Iterator<T> old = *this;
+	Temp = Temp->pNext;
+	return old;
+}
+template <typename T> bool Iterator<T>::operator==(const Iterator<T>&other) const
+{
+	return this->Temp == other.Temp;
+}
+template <typename T> bool Iterator<T>::operator!=(const Iterator<T>& other) const
+{
+	return this->Temp != other.Temp;
+}
+template<typename T>T& Iterator<T>::operator*()
+{
+	return Temp->Data;
+}
+//---------				Iterator methods end						---------------//
+//---------------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------------//
+//---------				ConstIterator methods						---------------//
+
+template <typename T> ConstIterator<T>::ConstIterator(Element<T>* Temp) :Temp(Temp)
+{
+	cout << "ItConstructor:\t" << this << endl;
+}
+template <typename T> ConstIterator<T>::~ConstIterator()
+{
+	cout << "ItDestructor:\t" << this << endl;
+}
+template <typename T>ConstIterator<T>& ConstIterator<T>::operator++()
+{
+	Temp = Temp->pNext;
+	return *this;
+}
+template <typename T>ConstIterator<T> ConstIterator<T>::operator++(int)
+{
+	ConstIterator<T> old = *this;
+	Temp = Temp->pNext;
+	return old;
+}
+template <typename T>bool ConstIterator<T>::operator==(const ConstIterator<T>& other) const
+{
+	return this->Temp == other.Temp;
+}
+template <typename T>bool ConstIterator<T>::operator!=(const ConstIterator<T>& other) const
+{
+	return this->Temp != other.Temp;
+}
+template <typename T>T ConstIterator<T>::operator*() const
+{
+	return Temp->Data;
+}
+
+//---------				ConstIterator methods end					---------------//
+//---------------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------------//
+//---------				ForwardList methods							---------------//
 template <typename T> Element<T>* ForwardList<T>::get_head()const
 {
 	return Head;
@@ -347,6 +384,8 @@ template<typename T> T& ForwardList<T>::operator[](int index)const
 	for (int i = 0; i < index; i++) Temp = Temp->pNext;
 	return Temp->Data;
 }
+//----------			ForwardList methods	end						---------------//
+//---------------------------------------------------------------------------------//
 
 template<typename T> ForwardList<T> operator+ (const ForwardList<T>& left, const ForwardList<T>& right)
 {
@@ -357,8 +396,11 @@ template<typename T> ForwardList<T> operator+ (const ForwardList<T>& left, const
 		result.push_back(*it);
 	}
 	return result;
-}
+}	
 
+
+/////////////		Class definition end (Конец определения класса)		/////////////
+/////////////////////////////////////////////////////////////////////////////////////
 #define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
@@ -539,3 +581,4 @@ int main()
 #endif // ITERATORS_CHECK
 	return 0;
 }
+
