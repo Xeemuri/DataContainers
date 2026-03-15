@@ -406,6 +406,8 @@ template<typename T> ForwardList<T> operator+ (const ForwardList<T>& left, const
 
 /////////////		Class definition end (Конец определения класса)		/////////////
 /////////////////////////////////////////////////////////////////////////////////////
+
+
 #define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
