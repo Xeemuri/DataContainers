@@ -325,7 +325,30 @@ ForwardList<T> operator+ (const ForwardList<T>& left, const ForwardList<T>& righ
 	return result;
 }
 
-#define BASE_CHECK
+template <typename T>
+class Stack : protected ForwardList<T>
+{
+public:
+	void push(T data)
+	{
+		ForwardList<T>::push_back(data);
+	}
+	void pop()
+	{
+		ForwardList<T>::pop_back();
+	}
+	T top() const
+	{
+		return ForwardList<T>::get_head->Data;
+	}
+	void print()
+	{
+		ForwardList<T>::print();
+	}
+};
+
+
+//#define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
 //#define COPY_SEMANTIC_CHECK
@@ -333,7 +356,7 @@ ForwardList<T> operator+ (const ForwardList<T>& left, const ForwardList<T>& righ
 //#define MOVE_SEMANTIC_CHECK
 //#define RANGE_BASED_FOR_ARRAY
 //#define RANGE_BASED_FOR_LIST
-#define ITERATORS_CHECK
+//#define ITERATORS_CHECK
 int main()
 {
 	setlocale(LC_ALL, "");
@@ -503,5 +526,10 @@ int main()
 	for (std::string i : s_list_2)cout << i << tab; cout << endl;
 	for (std::string i : s_list_3)cout << i << tab; cout << endl;
 #endif // ITERATORS_CHECK
-	return 0;
+	double a = 0.123;
+	Stack<double> stack;
+	for (int i = 0; i < 10; i++)stack.push(a++);
+	stack.print();
+	stack.pop();
+	stack.print();
 }
