@@ -331,7 +331,7 @@ class Stack : protected ForwardList<T>
 public:
 	void push(T data)
 	{
-		ForwardList<T>::push_back(data);
+		ForwardList<T>::push_front(data);
 	}
 	void pop()
 	{
