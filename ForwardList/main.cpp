@@ -107,6 +107,7 @@ public:
 	}
 };
 
+
 class ForwardList
 {
 	Element* Head; // Голова списка - является точкой входа в список
@@ -339,6 +340,24 @@ ForwardList operator+ (const ForwardList& left, const ForwardList& right)
 	return result;
 }
 
+template<typename T>
+class Stack
+{
+	Element* Top;
+	int TopIndex;
+private:
+	Stack()
+	{
+		Top = nullptr;
+	}
+	void push()
+	{
+		if (Top!=nullptr)
+		{
+
+		}
+	}
+};
 #define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
