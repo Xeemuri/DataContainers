@@ -5,6 +5,9 @@ using namespace std;
 #define tab '\t'
 #define delimeter "\n-----------------------\n"
 
+//#define STACK_1
+#define STACK_2
+
 class Element
 {
 	int Data;
@@ -28,6 +31,7 @@ public:
 		count--;
 	}
 	friend class ForwardList;
+	friend class Stack;
 	friend class Iterator;
 	friend class ConstIterator;
 	friend ForwardList operator+ (const ForwardList& left, const ForwardList& right);
@@ -340,25 +344,86 @@ ForwardList operator+ (const ForwardList& left, const ForwardList& right)
 	return result;
 }
 
-template<typename T>
+#ifdef STACK_1
 class Stack
 {
 	Element* Top;
-	int TopIndex;
-private:
+	size_t size;
+public:
 	Stack()
 	{
 		Top = nullptr;
+		size = 0;
 	}
-	void push()
+	~Stack()
 	{
-		if (Top!=nullptr)
+		while (Top) pop();
+	}
+	void push(int data)
+	{
+		if (Top == nullptr) Top = new Element(data);
+		else
 		{
-
+			Element* New = new Element(data);
+			New->pNext = Top;
+			Top = New;
 		}
+		size++;
+	}
+	void pop()
+	{
+		if (Top == nullptr) return;
+
+		Element* Erased = Top;
+		Top = Top->pNext;
+		delete Erased;
+		size--;
+	}
+	int get_Top() const
+	{
+		return Top->Data;
+	}
+	void print()
+	{
+		for (Element* Temp = Top; Temp; Temp = Temp->pNext)
+		{
+			cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << endl;
+		}
+		cout << "Размер: " << size << " элементов" << endl;
+	}
+
+	int& operator[](int index)
+	{
+		Element* Temp = Top;
+		for (int i = size - 1; i > index; i--) Temp = Temp->pNext;
+		return Temp->Data;
 	}
 };
-#define BASE_CHECK
+
+#endif // STACK_1
+
+class Stack :protected ForwardList
+{
+public:
+	void push(int Data)
+	{
+		push_front(Data);
+	}
+	void pop()
+	{
+		pop_front();
+	}
+	void print()const
+	{
+		ForwardList::print();
+	}
+	int top()const
+	{
+		return get_head()->Data;
+	}
+};
+
+//#define BASE_CHECK
 //#define SIZE_CHECK
 //#define HOMEWORK1
 //#define COPY_SEMANTIC_CHECK
@@ -520,4 +585,11 @@ void main()
 	for (int i : list3) cout << i << tab; cout << endl;
 #endif // ITERATORS_CHECK
 
+	Stack stack;
+	for (int i = 0; i < 10; i++) stack.push(i);
+	stack.print();
+	//for (int i = 0; i < 10; i++) stack[i] = rand() % 100;
+	stack.pop();
+	stack.print();
+	cout << stack.top() << endl;
 }
