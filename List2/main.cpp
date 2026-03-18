@@ -302,7 +302,34 @@ public:
 	}
 
 };
-
+template <typename T> class Line : protected List
+{
+public:
+	void add(T data)
+	{
+		push_back(data);
+	}
+	void move()
+	{
+		pop_front();
+	}
+	void pop_back()
+	{
+		List::pop_back();
+	}
+	int get_next() const
+	{
+		return get_head()->Data;
+	}
+	int get_last() const
+	{
+		return get_tail()->Data;
+	}
+	void print() const
+	{
+		List<T>::print();
+	}
+};
 //#define BASE_CHECK
 
 int main()
@@ -348,6 +375,12 @@ int main()
 	for (std::string i : sList)cout << i << tab; cout << endl;
 	for (List<std::string>::ReverseIterator it = sList.rbegin(); it != sList.rend(); ++it)
 		cout << *it << tab; cout << endl;
+
+	Line<int> line;
+	for (int i = 0; i < 10; i++) line.add(rand() % 100);
+	line.move();
+	line.print();
+
 	//for (List<int>::Iterator it = list.begin(); it != list.end(); it++)
 	//{
 	//	*it *= 100;
