@@ -15,13 +15,20 @@ class List
 		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr) :
 			Data(Data), pNext(pNext), pPrev(pPrev)
 		{
+#ifdef DEBUG
 			cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		~Element()
 		{
+#ifdef DEBUG
 			cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		friend class List;
+		friend class Line;
 	}*Head,*Tail;//Экземпляры классса можно объявлять непосредственно после описания класса
 	//Одним выражением можно объявить несколько переменных одного типа, один раз указав тип данных
 	// и перечислив имена объявляемых переменных через запятую.
@@ -157,6 +164,15 @@ public:
 	{
 		return nullptr;
 	}
+
+	Element* get_head() const
+	{
+		return Head;
+	}
+	Element* get_tail() const
+	{
+		return Tail;
+	}
 	List()
 	{
 		Head = Tail = nullptr;
@@ -290,7 +306,37 @@ public:
 
 };
 
+class Line : protected List
+{
+public:
+	void add(int data)
+	{
+		push_back(data);
+	}
+	void move()
+	{
+		pop_front();
+	}
+	void pop_back()
+	{
+		List::pop_back();
+	}
+	int get_next() const
+	{
+		return get_head()->Data;
+	}
+	int get_last() const
+	{
+		return get_tail()->Data;
+	}
+	void print() const
+	{
+		List::print();
+	}
+};
+
 //#define BASE_CHECK
+//#define ITERATORS_CHECK
 
 int main()
 {
@@ -316,6 +362,7 @@ int main()
 	list.print();
 	list.reverse_print();
 #endif // BASE_CHECK
+#ifdef ITERATORS_CHECK
 	List list = { 3,5,8,13,21 };
 	//list.print();
 	for (int i : list) cout << i << tab;
@@ -332,5 +379,11 @@ int main()
 		cout << *it << tab;
 	}
 	cout << endl;
+#endif // ITERATORS_CHECK
+	Line line;
+	for (int i = 0; i < 10; i++) line.add(rand()%100);
+	line.move();
+	line.print();
+
 
 }
