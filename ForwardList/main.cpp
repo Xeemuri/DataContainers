@@ -526,9 +526,9 @@ int main()
 	for (std::string i : s_list_2)cout << i << tab; cout << endl;
 	for (std::string i : s_list_3)cout << i << tab; cout << endl;
 #endif // ITERATORS_CHECK
-	double a = 0.123;
-	Stack<double> stack;
-	for (int i = 0; i < 10; i++)stack.push(a++);
+	string a = "а";
+	Stack<string> stack;
+	for (int i = 0; i < 10; i++)stack.push(a);
 	stack.print();
 	stack.pop();
 	stack.print();
