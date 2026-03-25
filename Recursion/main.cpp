@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 using namespace std;
 
 void Elevator(int floor);
@@ -13,8 +13,8 @@ int main()
 	//cout << "Hello World!";
 	double a;
 	int n;
-	//cout << "Ââåäèòå ÷èñëî: "; cin >> a;
-	cout << "Ââåäèòå ÷èñëî: "; cin >> n;
+	//cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> a;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> n;
 	Fibonacci(n);
 	//cout << power(a, n) << endl;
 	//Elevator(n);
@@ -25,12 +25,12 @@ void Elevator(int floor)
 {
 	if (floor <= 0)
 	{
-		cout << "Âû ïîä çåìëåé" << endl;
+		cout << "Ð’Ñ‹ Ð¿Ð¾Ð´ Ð·ÐµÐ¼Ð»ÐµÐ¹" << endl;
 		return;
 	}
-	cout << "Âû íà " << floor << " ýòàæå" << endl;
+	cout << "Ð’Ñ‹ Ð½Ð° " << floor << " ÑÑ‚Ð°Ð¶Ðµ" << endl;
 	Elevator(floor-1);
-	cout << "Âû íà " << floor << " ýòàæå" << endl;
+	cout << "Ð’Ñ‹ Ð½Ð° " << floor << " ÑÑ‚Ð°Ð¶Ðµ" << endl;
 }
 
 int factorial(int num)
@@ -60,18 +60,15 @@ double power(double a, int n)
 void Fibonacci(int n)
 {
 	if (n <= 0) return;
-	static int n1 = 0;
-	static int n2 = 1;
-	//Äî ìåíÿ íàñòîëüêî äîëãî íå äîõîäèëî, ÷òî ìîæíî èõ ñòàòè÷åñêèìè ñäåëàòü,
-	//÷òî ÿ óæå äî äðóãîé ðåàëèçàöèè äîãàäàëñÿ
+	static int n1 = 0, n2 = 1; //Ð”Ð¾ Ð¼ÐµÐ½Ñ ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ Ð´Ð¾Ð»Ð³Ð¾ Ð½Ðµ Ð´Ð¾Ñ…Ð¾Ð´Ð¸Ð»Ð¾, Ñ‡Ñ‚Ð¾ Ð¼Ð¾Ð¶Ð½Ð¾ Ñ‚Ð°Ðº ÑÐ´ÐµÐ»Ð°Ñ‚ÑŒ
 	cout << n1 << "\t";
 	int n3 = n1 + n2;
 	n1 = n2;
 	n2 = n3;
 	Fibonacci(n - 1);
-	
 }
 
+//Ð¯ Ð´Ð°Ð¶Ðµ Ð´Ð¾ Ð´Ñ€ÑƒÐ³Ð¾Ð¹ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ð¸ Ð´Ð¾Ð³Ð°Ð´Ð°Ð»ÑÑ
 int get_fibonacci(int n)
 {
 	if (n <= 1) return n;
