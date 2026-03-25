@@ -4,7 +4,8 @@ using namespace std;
 void Elevator(int floor);
 int factorial(int num);
 double power(double a, int n);
-void fibonacci(int n, int n1 = 0, int n2 = 1, bool check = true);
+int get_fibonacci(int n);
+void Fibonacci(int n);
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
 	int n;
 	//cout << "Введите число: "; cin >> a;
 	cout << "Введите число: "; cin >> n;
-	fibonacci(n, 20, 30);
+	Fibonacci(n);
 	//cout << power(a, n) << endl;
 	//Elevator(n);
 	//cout << factorial(n);
@@ -56,22 +57,28 @@ double power(double a, int n)
 	}*/
 }
 
-void fibonacci(int n, int n1, int n2,bool check)
+void Fibonacci(int n)
 {
-	if (n1 != 0 || n2 != 1 || check == true)
-	{
-		n1 = 0;
-		n2 = 1;
-		check = false;
-	}
-	else if (check == false)
-	{
-		if (n == 0) return;
-		cout << n1 << endl;
-		int n3 = n1 + n2;
-		n1 = n2;
-		n2 = n3;
-		fibonacci(n - 1, n1, n2);
-	}
+	if (n <= 0) return;
+	static int n1 = 0;
+	static int n2 = 1;
+	//До меня настолько долго не доходило, что можно их статическими сделать,
+	//что я уже до другой реализации догадался
+	cout << n1 << "\t";
+	int n3 = n1 + n2;
+	n1 = n2;
+	n2 = n3;
+	Fibonacci(n - 1);
 	
 }
+
+int get_fibonacci(int n)
+{
+	if (n <= 1) return n;
+	else return get_fibonacci(n - 1) + get_fibonacci(n-2);
+}
+
+//void Fibonacci(int n)
+//{
+//	for (int i = 0; i < n; i++) cout << get_fibonacci(i) << "\t";
+//}
