@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include<cmath>
 using namespace std;
 
@@ -72,7 +72,7 @@ public:
 		if (Root)
 		{
 			cout << Root->Data;
-			if (Root->Data == this->Root->Data) cout << " - Корень ";
+			if (Root->Data == this->Root->Data) cout << " - РљРѕСЂРµРЅСЊ ";
 			cout << endl;
 			print(Root->pLeft);
 			print(Root->pRight);
@@ -85,7 +85,7 @@ public:
 			print1(Root->pLeft);
 			print1(Root->pRight);
 			cout << Root->Data;
-			if (Root->Data == this->Root->Data) cout << " - Корень ";
+			if (Root->Data == this->Root->Data) cout << " - РљРѕСЂРµРЅСЊ ";
 			cout << endl;
 		}
 	}
@@ -95,7 +95,7 @@ public:
 		{
 			print2(Root->pLeft);
 			cout << Root->Data;
-			if (Root->Data == this->Root->Data) cout << " - Корень ";
+			if (Root->Data == this->Root->Data) cout << " - РљРѕСЂРµРЅСЊ ";
 			cout << endl;
 			print2(Root->pRight);
 		}
