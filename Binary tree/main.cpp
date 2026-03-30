@@ -9,6 +9,8 @@ class Tree
 {
 	class Element
 	{
+		static int sum;
+		static int count;
 		int Data;
 		Element* pLeft;
 		Element* pRight;
@@ -16,11 +18,23 @@ class Tree
 		Element(int Data, Element* pLeft = nullptr, Element* pRight = nullptr)
 			:Data(Data), pLeft(pLeft), pRight(pRight)
 		{
-			//cout << "EConstructor:\t" << this << endl;
+			cout << "EConstructor:\t" << this << endl;
+			count++;
+			sum += Data;
 		}
 		~Element()
 		{
-			//cout << "EDestructor:\t" << this << endl;
+			cout << "EDestructor:\t" << this << endl;
+			count--;
+			sum -= Data;
+		}
+		int get_count() const
+		{
+			return count;
+		}
+		int get_sum() const
+		{
+			return sum;
 		}
 		friend class Tree;
 	}*Root;
@@ -28,32 +42,43 @@ class Tree
 public:
 	Tree() :Root(nullptr)
 	{
-		//cout << "TConstructor:\t" << this << endl;
+		cout << "TConstructor:\t" << this << endl;
 	}
 	Tree(int Root_data)
 	{
 		Root = new Element(Root_data);
-		//cout << "1ArgConstructor:\t" << this << endl;
+		cout << "1ArgConstructor:\t" << this << endl;
 	}
 	~Tree()
 	{
-		//cout << "TDestructor:\t" << this << endl;
+		cout << "TDestructor:\t" << this << endl;
 	}
-	Element* get_Root() const
+	Element* getRoot() const
 	{
 		return Root;
 	}
+
+	int sum(Element* Root) const
+	{
+		return !Root ? 0: sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
+		//if (!Root) return 0;
+		//else return sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
+	}
+
 	int count(Element* Root) const
 	{
-
+		return !Root ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 	}
+
+	double avg() const
+	{
+		return (double)sum(getRoot()) / count(getRoot());
+	}
+
 	void insert(int Data, Element* Root)
 	{
-		if (this->Root == nullptr)
-		{
-			this->Root = new Element(Data);
-			return;
-		}
+		if (this->Root == nullptr)this->Root = new Element(Data);
+		if (Root == nullptr)return;
 
 		if (Data < Root->Data)
 		{
@@ -67,51 +92,50 @@ public:
 		}
 	}
 
-	void print(Element* Root)
+	void print(Element* Root) const
 	{
-		if (Root)
-		{
-			cout << Root->Data;
-			if (Root->Data == this->Root->Data) cout << " - Корень ";
-			cout << endl;
-			print(Root->pLeft);
-			print(Root->pRight);
-		}
+		if (Root == nullptr)return;
+
+		print(Root->pLeft);
+		cout << Root->Data << tab;
+		print(Root->pRight);
 	}
-	void print1(Element* Root)
+	
+	int minValue(Element* Root) const
 	{
-		if (Root)
-		{
-			print1(Root->pLeft);
-			print1(Root->pRight);
-			cout << Root->Data;
-			if (Root->Data == this->Root->Data) cout << " - Корень ";
-			cout << endl;
-		}
+		if (!this->Root) return 0;
+		return !Root->pLeft ? Root->Data : minValue(Root->pLeft);
+		//if (!Root->pLeft)return Root->Data;
+		//else return minValue(Root->pLeft);
 	}
-	void print2(Element* Root)
+	int maxValue(Element* Root)const
 	{
-		if (Root)
-		{
-			print2(Root->pLeft);
-			cout << Root->Data;
-			if (Root->Data == this->Root->Data) cout << " - Корень ";
-			cout << endl;
-			print2(Root->pRight);
-		}
+		if (!this->Root) return 0;
+		return !Root->pRight ? Root->Data : maxValue(Root->pRight);
+		//if (!Root->pRight)return Root->Data;
+		//else return maxValue(Root->pRight);
 	}
 };
-
+int Tree::Element::sum = 0;
+int Tree::Element::count = 0;
 
 int main()
 {
 	setlocale(LC_ALL, "RUS");
-	Tree tree(10);
-	tree.insert(2, tree.get_Root());
-	tree.insert(1, tree.get_Root());
-	tree.insert(4, tree.get_Root());
-	tree.insert(13, tree.get_Root());
-	tree.insert(9, tree.get_Root());
-	tree.insert(20, tree.get_Root());
-	tree.print1(tree.get_Root());
-}
+	int n;
+	Tree tree;
+	cout << "Введите размер дерева: "; cin >> n;
+
+	for (int i = 0; i < n; i++)
+	{
+		tree.insert(-rand() % 20, tree.getRoot());
+	}
+	tree.print(tree.getRoot());
+	cout << endl;
+
+	cout << "Минимальное значение в дереве: " << tree.minValue(tree.getRoot()) << endl;
+	cout << "Максимальное значение в дереве: " << tree.maxValue(tree.getRoot()) << endl;
+	cout << "Сумма элементов дерева: " << tree.sum(tree.getRoot()) << endl;
+	cout << "Количество элементов дерева: " << tree.count(tree.getRoot()) << endl;
+	cout << "Среднее-арифметическое элементов дерева: " << tree.avg() << endl;
+}	
