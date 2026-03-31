@@ -94,7 +94,7 @@ public:
 	}
 	void erase(int Data)
 	{
-		return erase(Data, Root);
+		Root = erase(Data, Root);
 	}
 private:
 	void insert(int Data, Element* Root)
@@ -163,69 +163,34 @@ private:
 		this->Root = nullptr;
 	}
 
-	void erase(int Data, Element* Root)
+	Element* erase(int Data, Element* Root)
 	{
-		if (!Root)return;
-		if (Data == Root->Data)
+		if (!Root)return nullptr;
+		if (Root->Data == Data)
 		{
-			int minVal = minValue(Root->pRight);
-			erase(minVal);	
-			Root->Data = minVal;
-			return;
-		}
-
-		if (Root->pLeft && Data == Root->pLeft->Data)
-		{
-
-			if (!Root->pLeft->pLeft && !Root->pLeft->pRight)
+			if (!Root->pLeft && !Root->pRight)
 			{
-				delete Root->pLeft;
-				Root->pLeft = nullptr;
-				return;
+				Element* erased = Root;
+				delete erased;
+				Root = nullptr;
 			}
-			else if (Root->pLeft->pLeft && !Root->pLeft->pRight )
+			else if (!Root->pLeft ||!Root->pRight)
 			{
-				int minVal = minValue(Root->pLeft->pLeft);
-				erase(minVal);
-				Root->pLeft->Data = minVal;
-				return;
+				Element* child = (Root->pLeft) ? Root->pLeft : Root->pRight;
+				delete Root;
+				return child;
 			}
 			else
 			{
-				int minVal = minValue(Root->pLeft->pRight);
-				erase(minVal);
-				Root->pLeft->Data = minVal;
-				return;
+				int maxVal = maxValue(Root->pLeft);
+				Root->Data = maxVal;
+				Root->pLeft = erase(maxVal, Root->pLeft);
 			}
+		return Root;
 		}
-
-
-		else if(Root->pRight && Data == Root->pRight->Data)
-		{ 
-			if (!Root->pRight->pLeft && !Root->pRight->pRight)
-			{
-				delete Root->pRight;
-				Root->pRight = nullptr;
-				return;
-			}
-			else if (Root->pRight->pLeft && !Root->pRight->pRight)
-			{
-				int minVal = minValue(Root->pRight->pLeft);
-				erase(minVal);
-				Root->pRight->Data = minVal;
-				return;
-			}
-			else
-			{
-				int minVal = minValue(Root->pRight->pRight);
-				erase(minVal);
-				Root->pRight->Data = minVal;
-				return;
-			}
-		}
-
-		if (Data < Root->Data) erase(Data, Root->pLeft);
-		if (Data >= Root->Data)erase(Data, Root->pRight);
+		if (Data < Root->Data) Root->pLeft = erase(Data, Root->pLeft);
+		if (Data > Root->Data) Root->pRight = erase(Data, Root->pRight);
+		return Root;
 	}
 };
 
@@ -295,9 +260,11 @@ int main()
 	cout << "Количество элементов дерева: " << u_tree.count() << endl;
 	cout << "Среднее-арифметическое элементов дерева: " << u_tree.avg() << endl;
 #endif // BASE_CHECK
-	Tree tree = { 50, 25, 75, 16, 32, 64, 85, 91, 95};
+	Tree tree = { 50, 25, 75, 75, 16, 32, 64, 85, 91, 95};
 	tree.print();
 	cout << "Глубина дерева: " << tree.depth() << endl;
-	tree.erase(75);
+	int n;
+	cout << "Введите удаляемое значение: ";cin >> n;
+	tree.erase(n);
 	tree.print();
 }
