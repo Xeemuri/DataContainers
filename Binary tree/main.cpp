@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#include<cmath>
+#include <ctime>
 using namespace std;
 
 #define tab "\t"
@@ -90,7 +90,8 @@ public:
 	}
 	void clear()
 	{
-		return clear(Root);
+		clear(Root);
+		//Root = nullptr;
 	}
 	void erase(int Data)
 	{
@@ -153,14 +154,13 @@ private:
 		else return depth(Root->pRight) + 1;
 	}
 
-	void clear(Element* Root)
+	void clear(Element*& Root)
 	{
 		if (!Root) return;
 		clear(Root->pLeft);
 		clear(Root->pRight);
 		delete Root;
-
-		this->Root = nullptr;
+		Root = nullptr;
 	}
 
 	Element* erase(int Data, Element* Root)
@@ -224,7 +224,7 @@ public:
 
 int main()
 {
-	setlocale(LC_ALL, "RUS");
+	setlocale(0, "");
 
 #ifdef BASE_CHECK
 	int n;
@@ -262,9 +262,10 @@ int main()
 #endif // BASE_CHECK
 	Tree tree = { 50, 25, 75, 75, 16, 32, 64, 85, 91, 95};
 	tree.print();
-	cout << "Глубина дерева: " << tree.depth() << endl;
 	int n;
-	cout << "Введите удаляемое значение: ";cin >> n;
-	tree.erase(n);
+	//cout << "Введите удаляемое значение: ";cin >> n;
+	cout << "Глубина дерева: " << tree.depth() << endl;
+	//tree.erase(n);
+	tree.clear();
 	tree.print();
 }
