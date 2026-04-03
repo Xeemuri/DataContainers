@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <string>
 #include <ctime>
 using namespace std;
 
@@ -17,11 +18,17 @@ protected:
 		Element(int Data, Element* pLeft = nullptr, Element* pRight = nullptr)
 			:Data(Data), pLeft(pLeft), pRight(pRight)
 		{
+#ifdef DEBUG
 			cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		~Element()
 		{
+#ifdef DEBUG
 			cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		friend class Tree;
 		friend class UniqueTree;
@@ -101,8 +108,8 @@ public:
 private:
 	void insert(int Data, Element* Root)
 	{
-		if (this->Root == nullptr)this->Root = new Element(Data);
-		if (Root == nullptr)return;
+		if (!this->Root)this->Root = new Element(Data);
+		if (!Root)return;
 
 		if (Data < Root->Data)
 		{
@@ -124,7 +131,7 @@ private:
 
 	void print(Element* Root) const
 	{
-		if (Root == nullptr)return;
+		if (!Root)return;
 
 		print(Root->pLeft);
 		cout << Root->Data << tab;
@@ -150,9 +157,14 @@ private:
 
 	int depth(Element* Root) const
 	{
-		if (Root == nullptr) return 0;
-		if (depth(Root->pLeft) > depth(Root->pRight))return depth(Root->pLeft) + 1;
-		else return depth(Root->pRight) + 1;
+		//if (Root == nullptr) return 0;
+		//if (depth(Root->pLeft) > depth(Root->pRight))return depth(Root->pLeft) + 1;
+		//else return depth(Root->pRight) + 1;
+
+		if (!Root) return 0;
+		int left = depth(Root->pLeft);
+		int right = depth(Root->pRight);
+		return (left > right ? left : right) + 1;
 	}
 
 	void clear(Element*& Root)
@@ -164,74 +176,65 @@ private:
 		Root = nullptr;
 	}
 
-	//Element* erase(int Data, Element*& Root)
+	Element* erase(int Data, Element* Root)
+	{
+		if (!Root)return nullptr;
+		if (Root->Data == Data)
+		{
+			if (!Root->pLeft && !Root->pRight)
+			{
+				delete Root;
+				Root = nullptr;
+			}
+			else if (!Root->pLeft || !Root->pRight)
+			{
+				Element* child = (Root->pLeft) ? Root->pLeft : Root->pRight;
+				delete Root;
+				return child;
+			}
+			else
+			{
+				int maxVal = maxValue(Root->pLeft);
+				Root->Data = maxVal;
+				erase(maxVal, Root->pLeft);
+			}
+			return Root;
+		}
+		if (Data < Root->Data) Root->pLeft = erase(Data, Root->pLeft);
+		if (Data > Root->Data) Root->pRight = erase(Data, Root->pRight);
+		return Root;
+	}
+
+	//void erase(int Data, Element*& Root)
 	//{
-	//	if (!Root)return nullptr;
-	//	if (Root->Data == Data)
+	//	if (!Root)return;
+	//	if (Data == Root->Data)
 	//	{
-	//		if (!Root->pLeft && !Root->pRight)
+	//		if (Root->pLeft == Root->pRight)
 	//		{
 	//			delete Root;
 	//			Root = nullptr;
-	//		}
-	//		else if (!Root->pLeft ||!Root->pRight)
-	//		{
-	//			Element* child = (Root->pLeft) ? Root->pLeft : Root->pRight;
-	//			delete Root;
-	//			return child;
 	//		}
 	//		else
 	//		{
 	//			if (count(Root->pLeft) > count(Root->pRight))
 	//			{
-	//				int maxVal = maxValue(Root->pLeft);
-	//				Root->Data = maxVal;
-	//				erase(maxVal, Root->pLeft);
+	//				Root->Data = maxValue(Root->pLeft);
+	//				erase(maxValue(Root->pLeft), Root->pLeft);
 	//			}
 	//			else
 	//			{
-	//				int minVal = minValue(Root->pRight);
-	//				Root->Data = minVal;
-	//				erase(minVal, Root->pRight);
+	//				Root->Data = minValue(Root->pRight);
+	//				erase(minValue(Root->pRight), Root->pRight);
 	//			}
 	//		}
-	//	return Root;
 	//	}
-	//	if (Data < Root->Data) Root->pLeft = erase(Data, Root->pLeft);
-	//	if (Data > Root->Data) Root->pRight = erase(Data, Root->pRight);
-	//	return Root;
+	//	if (Root)
+	//	{
+	//		if (Root->pLeft)erase(Data, Root->pLeft);
+	//		if (Root->pRight)erase(Data, Root->pRight);
+	//	}
 	//}
-
-	void erase(int Data, Element*& Root)
-	{
-		if (!Root)return;
-		if (Data == Root->Data)
-		{
-			if (Root->pLeft == Root->pRight)
-			{
-				delete Root;
-				Root = nullptr;
-			}
-			else
-			{
-				if (count(Root->pLeft) > count(Root->pRight))
-				{
-					Root->Data = maxValue(Root->pLeft);
-					erase(maxValue(Root->pLeft), Root->pLeft);
-				}
-				else
-				{
-					Root->Data = minValue(Root->pRight);
-					erase(minValue(Root->pRight), Root->pRight);
-				}
-			}
-		}
-		if (Root)
-		{
-			if (Root->pLeft)erase(Data, Root->pLeft);
-			if (Root->pRight)erase(Data, Root->pRight);
-		}
-	}
 };
 
 
@@ -261,6 +264,35 @@ public:
 };
 
 //#define BASE_CHECK
+//#define ERASE_CHECK
+
+class Timer
+{
+	clock_t begin;
+	clock_t end;
+public:
+	Timer()
+	{
+		begin = 0;
+		end = 0;
+	}
+	string start()
+	{
+		begin = clock();
+		return "";
+	}
+	double diff() const
+	{
+		if (begin != 0 && end != 0) return (double(end - begin) / CLOCKS_PER_SEC);
+		else return 0;
+	}
+	string print()
+	{
+		end = clock();
+		return "Выполнено за " + to_string(diff()) + " секунд.\n";
+		//string
+	}
+};
 
 int main()
 {
@@ -300,12 +332,41 @@ int main()
 	cout << "Количество элементов дерева: " << u_tree.count() << endl;
 	cout << "Среднее-арифметическое элементов дерева: " << u_tree.avg() << endl;
 #endif // BASE_CHECK
-	Tree tree = { 50, 25, 75, 75, 16, 32, 64, 85, 91, 95};
+#ifdef ERASE_CHECK
+	Tree tree = { 50, 25, 75, 75, 16, 32, 64, 85, 91, 95 };
 	tree.print();
 	int n;
 	cout << "Глубина дерева: " << tree.depth() << endl;
-	cout << "Введите удаляемое значение: ";cin >> n;
+	cout << "Введите удаляемое значение: "; cin >> n;
 	tree.erase(n);
-	//tree.clear();
+	tree.clear();
 	tree.print();
+#endif // ERASE_CHECK
+	Timer timer;
+	Tree tree;
+
+	int n;
+	cout << "Введите размеры дерева: "; cin >> n;
+	timer.start();
+	for (int i = 0; i < n; i++)
+	{
+		tree.insert(rand() % 10000);
+	}
+	cout << timer.print();
+
+	cout << "Минимальное значение в дереве: " << timer.start() << tree.minValue() << "\t\t" << timer.print();
+
+	cout << "Максимальное значение в дереве: " << timer.start() << tree.maxValue() << "\t\t" << timer.print();
+
+	cout << "Сумма элементов дерева: " << timer.start() << tree.sum() << "\t\t\t" << timer.print();
+
+	cout << "Количество элементов дерева: " << timer.start() << tree.count() << "\t\t" << timer.print();
+
+	cout << "Среднее-арифметическое элементов дерева: " << timer.start() << tree.avg() << "\t" << timer.print();
+
+	cout << "Глубина дерева: " << timer.start() << tree.depth() << "\t" << timer.print();
+
+	//int value;
+	//cout << "Введите удаляемое значение: "; cin >> value;
+	//tree.erase(value);
 }
