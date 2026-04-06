@@ -367,22 +367,28 @@ int main()
 	}
 	cout << timer.print();
 
-	cout << "Минимальное значение в дереве: " << timer.start() << tree.minValue() << "\t\t" << timer.print();
+	//cout << "Минимальное значение в дереве: " << timer.start() << tree.minValue() << "\t\t" << timer.print();
 
-	cout << "Максимальное значение в дереве: " << timer.start() << tree.maxValue() << "\t\t" << timer.print();
+	//cout << "Максимальное значение в дереве: " << timer.start() << tree.maxValue() << "\t\t" << timer.print();
 
-	cout << "Сумма элементов дерева: " << timer.start() << tree.sum() << "\t\t\t" << timer.print();
+	//cout << "Сумма элементов дерева: " << timer.start() << tree.sum() << "\t\t\t" << timer.print();
 
-	cout << "Количество элементов дерева: " << timer.start() << tree.count() << "\t\t" << timer.print();
+	//cout << "Количество элементов дерева: " << timer.start() << tree.count() << "\t\t" << timer.print();
 
-	cout << "Среднее-арифметическое элементов дерева: " << timer.start() << tree.avg() << "\t" << timer.print();
+	//cout << "Среднее-арифметическое элементов дерева: " << timer.start() << tree.avg() << "\t" << timer.print();
 
-	cout << "Глубина дерева: " << timer.start() << tree.depth() << "\t" << timer.print();
+	//cout << "Глубина дерева: " << timer.start() << tree.depth() << "\t" << timer.print();
 
 	//int value;
 	//cout << "Введите удаляемое значение: "; cin >> value;
 	//tree.erase(value);
 
 	//measure("asdf", tree.depth());
+	measure("Минимальное значение в дереве: ", &(Tree::minValue), tree);
+	measure("Максимальное значение в дереве: ", &(Tree::maxValue), tree);
+	measure("Сумма элементов дерева: ", &(Tree::sum), tree);
+	measure("Количество элементов дерева: ", &(Tree::count), tree);
+	measure("Среднее-арифметическое элементов дерева: ", &(Tree::avg), tree);
+	measure("Глубина дерева: ", &(Tree::depth), tree);
 }
 
