@@ -113,12 +113,12 @@ private:
 
 		if (Data < Root->Data)
 		{
-			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
+			if (!Root->pLeft)Root->pLeft = new Element(Data);
 			else insert(Data, Root->pLeft);
 		}
 		else
 		{
-			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
+			if (!Root->pRight)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
 		}
 	}
@@ -238,6 +238,19 @@ private:
 };
 
 
+template <typename T> void  measure(const char message[], T(Tree::*function)()const, const Tree& tree)
+{
+	clock_t start = clock();
+	T result = (tree.*function)();
+	clock_t end = clock();
+	cout.width(48);
+	cout << std::left;
+	cout << message << result << "\t Выполнено за "
+		<< double(end - start) / CLOCKS_PER_SEC << " секунд" << endl;
+
+
+}
+
 class UniqueTree : public Tree
 {
 	void insert(int Data, Element* Root)
@@ -350,7 +363,7 @@ int main()
 	timer.start();
 	for (int i = 0; i < n; i++)
 	{
-		tree.insert(rand() % 10000);
+		tree.insert(rand()/* % 1000*/);
 	}
 	cout << timer.print();
 
@@ -369,4 +382,7 @@ int main()
 	//int value;
 	//cout << "Введите удаляемое значение: "; cin >> value;
 	//tree.erase(value);
+
+	//measure("asdf", tree.depth());
 }
+
