@@ -1,8 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include <ctime>
-#include<stdlib.h>
-#include<stdio.h>
+
 using namespace std;
 
 #define tab "\t"
@@ -175,18 +174,20 @@ private:
 
 	void depth_print(int depth, Element* Root, int spaces, int current = 1)
 	{
+		if (spaces == 0) spaces = 1;
 		if (current > depth || !Root)
 		{
-			for (int i = 0; i < spaces / 2; i++) cout << " ";
+			for (int i = 0; i < spaces; i++) cout << " ";
 			return;
 		}
 		if (current == depth)
 		{
-			for (int i = 0; i < spaces/2; i++) cout << " ";
 			cout << Root->Data;
+			for (int i = 0; i < spaces; i++) cout << " ";
+			return;
 		}
 		depth_print(depth, Root->pLeft,spaces, current+1);
-		for (int i = 0; i < spaces / 2; i++) cout << " ";
+		cout << " ";
 		depth_print(depth, Root->pRight,spaces, current+1);
 
 	}
@@ -194,13 +195,22 @@ private:
 	void tree_print(Element* Root)
 	{
 		int depth = Tree::depth(Root);
-		int spaces = pow(2,depth) + 1;
+		int n = depth;
 		for (int i = 1; i <= depth; i++)
 		{
-			depth_print(i,Root,spaces);
-			spaces /= 2;
+			int spaces = get_spaces(n);
+			int prev_spaces = get_spaces(n + 1); n--;
+			for (int j = 0; j < spaces; j++) cout << " ";
+			//spaces = get_spaces(n--);
+			depth_print(i,Root,prev_spaces);
 			cout << endl;
 		}
+	}
+
+	int get_spaces(int n)
+	{
+		if (n <= 1)return 0;
+		return get_spaces(n - 1) + (1 << (n - 2));
 	}
 
 	void clear(Element*& Root)
@@ -241,6 +251,11 @@ private:
 		return Root;
 	}
 
+	void balance(Element* Root)
+	{
+		if (!Root) return;
+		d
+	}
 	//void erase(int Data, Element*& Root)
 	//{
 	//	if (!Root)return;
@@ -430,18 +445,17 @@ int main()
 	measure("Глубина дерева: ", &(Tree::depth), tree);
 #endif // MEASURE_CHECK
 
-
+	tree.insert(5);
+	tree.insert(3);
+	tree.insert(1);
+	//tree.insert(4);
+	tree.insert(8);
+	//tree.insert(7);
 	tree.insert(9);
-	tree.insert(4);
-	tree.insert(15);
-	tree.insert(6);
-	tree.insert(12);
-	tree.insert(17);
-	tree.insert(2);
 	tree.insert(0);
-	tree.insert(7);
-	tree.insert(16);
-	tree.insert(18);
+	tree.insert(10);
+	tree.insert(20);
+	//for (int i = 0; i < 10; i++)tree.insert(i);
 	tree.tree_print();
 }
 
