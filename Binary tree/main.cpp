@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <string>
 #include <ctime>
+#include<stdlib.h>
+#include<stdio.h>
 using namespace std;
 
 #define tab "\t"
@@ -105,6 +107,14 @@ public:
 		//Root = erase(Data, Root);
 		erase(Data, Root);
 	}
+	void depth_print(int depth) 
+	{
+		depth_print(depth, Root, 0);
+	}
+	void tree_print()
+	{
+		tree_print(Root);
+	}
 private:
 	void insert(int Data, Element* Root)
 	{
@@ -157,14 +167,40 @@ private:
 
 	int depth(Element* Root) const
 	{
-		//if (Root == nullptr) return 0;
-		//if (depth(Root->pLeft) > depth(Root->pRight))return depth(Root->pLeft) + 1;
-		//else return depth(Root->pRight) + 1;
-
 		if (!Root) return 0;
 		int left = depth(Root->pLeft);
 		int right = depth(Root->pRight);
 		return (left > right ? left : right) + 1;
+	}
+
+	void depth_print(int depth, Element* Root, int spaces, int current = 1)
+	{
+		if (current > depth || !Root)
+		{
+			for (int i = 0; i < spaces / 2; i++) cout << " ";
+			return;
+		}
+		if (current == depth)
+		{
+			for (int i = 0; i < spaces/2; i++) cout << " ";
+			cout << Root->Data;
+		}
+		depth_print(depth, Root->pLeft,spaces, current+1);
+		for (int i = 0; i < spaces / 2; i++) cout << " ";
+		depth_print(depth, Root->pRight,spaces, current+1);
+
+	}
+
+	void tree_print(Element* Root)
+	{
+		int depth = Tree::depth(Root);
+		int spaces = pow(2,depth) + 1;
+		for (int i = 1; i <= depth; i++)
+		{
+			depth_print(i,Root,spaces);
+			spaces /= 2;
+			cout << endl;
+		}
 	}
 
 	void clear(Element*& Root)
@@ -278,6 +314,7 @@ public:
 
 //#define BASE_CHECK
 //#define ERASE_CHECK
+//#define MEASURE_CHECK
 
 class Timer
 {
@@ -358,6 +395,7 @@ int main()
 	Timer timer;
 	Tree tree;
 
+#ifdef MEASURE_CHECK
 	int n;
 	cout << "Введите размеры дерева: "; cin >> n;
 	timer.start();
@@ -383,12 +421,27 @@ int main()
 	//cout << "Введите удаляемое значение: "; cin >> value;
 	//tree.erase(value);
 
-	//measure("asdf", tree.depth());
+	measure("asdf", tree.depth());
 	measure("Минимальное значение в дереве: ", &(Tree::minValue), tree);
 	measure("Максимальное значение в дереве: ", &(Tree::maxValue), tree);
 	measure("Сумма элементов дерева: ", &(Tree::sum), tree);
 	measure("Количество элементов дерева: ", &(Tree::count), tree);
 	measure("Среднее-арифметическое элементов дерева: ", &(Tree::avg), tree);
 	measure("Глубина дерева: ", &(Tree::depth), tree);
+#endif // MEASURE_CHECK
+
+
+	tree.insert(9);
+	tree.insert(4);
+	tree.insert(15);
+	tree.insert(6);
+	tree.insert(12);
+	tree.insert(17);
+	tree.insert(2);
+	tree.insert(0);
+	tree.insert(7);
+	tree.insert(16);
+	tree.insert(18);
+	tree.tree_print();
 }
 
