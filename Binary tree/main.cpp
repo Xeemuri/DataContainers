@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include <ctime>
+#include <iomanip>
 
 using namespace std;
 
@@ -106,9 +107,10 @@ public:
 		//Root = erase(Data, Root);
 		erase(Data, Root);
 	}
-	void depth_print(int depth) 
+	void depth_print(int depth)
 	{
-		depth_print(depth, Root, 0);
+		int printed = 0;
+		depth_print(depth, Root, 4, Tree::depth(Root), printed);
 	}
 	void tree_print()
 	{
@@ -172,46 +174,53 @@ private:
 		return (left > right ? left : right) + 1;
 	}
 
-	void depth_print(int depth, Element* Root, int spaces, int current = 1)
+	//int levelElems = 1 << depth;
+	//if (i >= levelElems) return;
+	void depth_print(int depth, Element* Root, int elemWidth, int max_depth, int& i, int level = 1)
 	{
-		if (spaces == 0) spaces = 1;
-		if (current > depth || !Root)
+		int total = 1 << (depth-1);
+		int spaces = elemWidth * ((1 << max_depth - depth + 1)) - 1;
+		if (level > depth) return;
+		if (level == depth)
 		{
-			for (int i = 0; i < spaces; i++) cout << " ";
+			if (Root)
+				cout << setw(elemWidth) << Root->Data;
+			else
+				cout << setw(elemWidth) << "";
+
+			if (i != total - 1)
+				cout << setfill(' ') << setw(elemWidth * (1 << (max_depth - level)) - 1) << "";
+			i++;
 			return;
 		}
-		if (current == depth)
+		if (!Root)
 		{
-			cout << Root->Data;
-			for (int i = 0; i < spaces; i++) cout << " ";
+			depth_print(depth, nullptr, elemWidth, max_depth, i, level + 1);
+			depth_print(depth, nullptr, elemWidth, max_depth, i, level + 1);
 			return;
 		}
-		depth_print(depth, Root->pLeft,spaces, current+1);
-		cout << " ";
-		depth_print(depth, Root->pRight,spaces, current+1);
+		depth_print(depth, Root->pLeft, elemWidth, max_depth, i, level + 1);
+		depth_print(depth, Root->pRight, elemWidth, max_depth, i, level + 1);
 
 	}
 
 	void tree_print(Element* Root)
 	{
-		int depth = Tree::depth(Root);
-		int n = depth;
-		for (int i = 1; i <= depth; i++)
+		if (!Root)return;
+		int height = depth(Root);
+		int elemWidth = 4;				// размер ячейки для элемента
+		for (int level = 1; level <= height; level++)
 		{
-			int spaces = get_spaces(n);
-			int prev_spaces = get_spaces(n + 1); n--;
-			for (int j = 0; j < spaces; j++) cout << " ";
-			//spaces = get_spaces(n--);
-			depth_print(i,Root,prev_spaces);
+			int i = 0;
+			//Начальный отступ
+			int initial_spaces = elemWidth * (1 << (height - level)) - 1;
+			if (initial_spaces>0)
+				cout << setw(initial_spaces) << "";
+			depth_print(level, Root, elemWidth, height, i);
 			cout << endl;
 		}
 	}
 
-	int get_spaces(int n)
-	{
-		if (n <= 1)return 0;
-		return get_spaces(n - 1) + (1 << (n - 2));
-	}
 
 	void clear(Element*& Root)
 	{
@@ -251,11 +260,6 @@ private:
 		return Root;
 	}
 
-	void balance(Element* Root)
-	{
-		if (!Root) return;
-		d
-	}
 	//void erase(int Data, Element*& Root)
 	//{
 	//	if (!Root)return;
@@ -289,7 +293,7 @@ private:
 };
 
 
-template <typename T> void  measure(const char message[], T(Tree::*function)()const, const Tree& tree)
+template <typename T> void  measure(const char message[], T(Tree::* function)()const, const Tree& tree)
 {
 	clock_t start = clock();
 	T result = (tree.*function)();
@@ -448,13 +452,19 @@ int main()
 	tree.insert(5);
 	tree.insert(3);
 	tree.insert(1);
-	//tree.insert(4);
+	tree.insert(4);
 	tree.insert(8);
-	//tree.insert(7);
-	tree.insert(9);
-	tree.insert(0);
+	tree.insert(7);
+	tree.insert(11);
+	tree.insert(13);
 	tree.insert(10);
-	tree.insert(20);
+	//tree.insert(4);
+	//tree.insert(8);
+	//tree.insert(7);
+	//tree.insert(9);
+	//tree.insert(0);
+	//tree.insert(10);
+	//tree.insert(20);
 	//for (int i = 0; i < 10; i++)tree.insert(i);
 	tree.tree_print();
 }
