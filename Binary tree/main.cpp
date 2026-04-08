@@ -178,9 +178,8 @@ private:
 	//if (i >= levelElems) return;
 	void depth_print(int depth, Element* Root, int elemWidth, int max_depth, int& i, int level = 1)
 	{
-		int total = 1 << (depth-1);
-		int spaces = elemWidth * ((1 << max_depth - depth + 1)) - 1;
-		if (level > depth) return;
+		int spacing = elemWidth * ((1 << (max_depth - depth + 1)) - 1);
+
 		if (level == depth)
 		{
 			if (Root)
@@ -188,34 +187,37 @@ private:
 			else
 				cout << setw(elemWidth) << "";
 
-			if (i != total - 1)
-				cout << setfill(' ') << setw(elemWidth * (1 << (max_depth - level)) - 1) << "";
+			if (i != (1 << (depth - 1)) - 1)
+				cout << setw(spacing) << "";
 			i++;
 			return;
 		}
+
 		if (!Root)
 		{
 			depth_print(depth, nullptr, elemWidth, max_depth, i, level + 1);
 			depth_print(depth, nullptr, elemWidth, max_depth, i, level + 1);
-			return;
 		}
-		depth_print(depth, Root->pLeft, elemWidth, max_depth, i, level + 1);
-		depth_print(depth, Root->pRight, elemWidth, max_depth, i, level + 1);
-
+		else
+		{
+			depth_print(depth, Root->pLeft, elemWidth, max_depth, i, level + 1);
+			depth_print(depth, Root->pRight, elemWidth, max_depth, i, level + 1);
+		}
 	}
 
 	void tree_print(Element* Root)
 	{
-		if (!Root)return;
+		if (!Root) return;
 		int height = depth(Root);
-		int elemWidth = 4;				// размер ячейки для элемента
+		int elemWidth = 4;
+
 		for (int level = 1; level <= height; level++)
 		{
 			int i = 0;
-			//Начальный отступ
-			int initial_spaces = elemWidth * (1 << (height - level)) - 1;
-			if (initial_spaces>0)
+			int initial_spaces = elemWidth * ((1 << (height - level)) - 1);
+			if (initial_spaces > 0)
 				cout << setw(initial_spaces) << "";
+
 			depth_print(level, Root, elemWidth, height, i);
 			cout << endl;
 		}
