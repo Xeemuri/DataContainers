@@ -2,11 +2,12 @@
 #include <string>
 #include <ctime>
 #include <iomanip>
+#include <vector>
 
 using namespace std;
 
 #define tab "\t"
-#define delimiter "\n--------------------\n"
+#define delimiter "\n-------------------------------------------------\n"
 
 class Tree
 {
@@ -104,8 +105,8 @@ public:
 	}
 	void erase(int Data)
 	{
-		//Root = erase(Data, Root);
-		erase(Data, Root);
+		Root = erase(Data, Root);
+		//erase(Data, Root);
 	}
 	void depth_print(int depth)
 	{
@@ -115,6 +116,10 @@ public:
 	void tree_print()
 	{
 		tree_print(Root);
+	}
+	void balance()
+	{
+		balance(Root);
 	}
 private:
 	void insert(int Data, Element* Root)
@@ -174,8 +179,6 @@ private:
 		return (left > right ? left : right) + 1;
 	}
 
-	//int levelElems = 1 << depth;
-	//if (i >= levelElems) return;
 	void depth_print(int depth, Element* Root, int elemWidth, int max_depth, int& i, int level = 1)
 	{
 		int spacing = elemWidth * ((1 << (max_depth - depth + 1)) - 1);
@@ -209,7 +212,7 @@ private:
 	{
 		if (!Root) return;
 		int height = depth(Root);
-		int elemWidth = 4;
+		int elemWidth = 2;
 
 		for (int level = 1; level <= height; level++)
 		{
@@ -220,8 +223,18 @@ private:
 
 			depth_print(level, Root, elemWidth, height, i);
 			cout << endl;
+			cout << endl;
+			cout << endl;
 		}
 	}
+
+	//void tree_print(Element* Root, int depth)
+	//{
+	//	if (!Root) return;
+	//	if (depth <= this->depth())depth_print(depth);
+	//	else return;
+	//	tree_print(Root, depth + 1);
+	//}
 
 
 	void clear(Element*& Root)
@@ -233,7 +246,7 @@ private:
 		Root = nullptr;
 	}
 
-	Element* erase(int Data, Element* Root)
+	Element* erase(int Data, Element*& Root)
 	{
 		if (!Root)return nullptr;
 		if (Root->Data == Data)
@@ -260,6 +273,21 @@ private:
 		if (Data < Root->Data) Root->pLeft = erase(Data, Root->pLeft);
 		if (Data > Root->Data) Root->pRight = erase(Data, Root->pRight);
 		return Root;
+	}
+
+	void balance(Element*& Root)
+	{
+		int left_count = count(Root->pLeft);
+		int right_count = count(Root->pRight);
+		if (left_count - right_count > 1 || right_count-left_count > 1)
+		{
+			int data = Root->Data;
+			erase(data);
+			insert(data);
+			//tree_print();
+			balance(Root);
+
+		}
 	}
 
 	//void erase(int Data, Element*& Root)
@@ -304,8 +332,6 @@ template <typename T> void  measure(const char message[], T(Tree::* function)()c
 	cout << std::left;
 	cout << message << result << "\t Выполнено за "
 		<< double(end - start) / CLOCKS_PER_SEC << " секунд" << endl;
-
-
 }
 
 class UniqueTree : public Tree
@@ -451,15 +477,15 @@ int main()
 	measure("Глубина дерева: ", &(Tree::depth), tree);
 #endif // MEASURE_CHECK
 
-	tree.insert(5);
-	tree.insert(3);
-	tree.insert(1);
-	tree.insert(4);
-	tree.insert(8);
-	tree.insert(7);
-	tree.insert(11);
-	tree.insert(13);
-	tree.insert(10);
+	tree = { 5,1,0,2,8,3,6 };
+	//tree.insert(3);
+	//tree.insert(1);
+	//tree.insert(4);
+	//tree.insert(8);
+	//tree.insert(7);
+	//tree.insert(11);
+	//tree.insert(13);
+	//tree.insert(10);
 	//tree.insert(4);
 	//tree.insert(8);
 	//tree.insert(7);
@@ -467,7 +493,10 @@ int main()
 	//tree.insert(0);
 	//tree.insert(10);
 	//tree.insert(20);
-	//for (int i = 0; i < 10; i++)tree.insert(i);
+	//for (int i = 0; i < 10; i++)tree.insert(rand()%100);
+	tree.tree_print();
+	tree.balance();
+	cout << delimiter;
 	tree.tree_print();
 }
 
