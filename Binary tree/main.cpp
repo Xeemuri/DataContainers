@@ -121,10 +121,18 @@ public:
 	{
 		balance(Root);
 	}
+	void balance1()
+	{
+		balance1(Root);
+	}
 private:
 	void insert(int Data, Element* Root)
 	{
-		if (!this->Root)this->Root = new Element(Data);
+		if (!this->Root)
+		{
+			this->Root = new Element(Data);
+			return;
+		}
 		if (!Root)return;
 
 		if (Data < Root->Data)
@@ -260,6 +268,7 @@ private:
 			{
 				Element* child = (Root->pLeft) ? Root->pLeft : Root->pRight;
 				delete Root;
+				//Root = nullptr;
 				return child;
 			}
 			else
@@ -274,20 +283,89 @@ private:
 		if (Data > Root->Data) Root->pRight = erase(Data, Root->pRight);
 		return Root;
 	}
-
+	void erase1(int Data, Element*& Root)
+	{
+		if (Root == nullptr)return;
+		if (Data == Root->Data)
+		{
+			if (Root->pLeft == Root->pRight)	//Проверям, является ли удаляемый элемент листком
+			{
+				//И если элемент - листок (НЕ имеет потомков), удаляем его из памяти
+				delete Root;
+				Root = nullptr;
+			}
+			else
+			{
+				if (count(Root->pLeft) > count(Root->pRight))
+				{
+					Root->Data = maxValue(Root->pLeft);
+					erase1(maxValue(Root->pLeft), Root->pLeft);
+				}
+				else
+				{
+					Root->Data = minValue(Root->pRight);
+					erase1(minValue(Root->pRight), Root->pRight);
+				}
+			}
+		}
+		if (Root)
+		{
+			if (Root->pLeft)erase1(Data, Root->pLeft);
+			if (Root->pRight)erase1(Data, Root->pRight);
+		}
+	}
 	void balance(Element*& Root)
 	{
 		int left_count = count(Root->pLeft);
 		int right_count = count(Root->pRight);
-		if (left_count - right_count > 1 || right_count-left_count > 1)
+		if (abs(left_count - right_count) > 1)
 		{
+
 			int data = Root->Data;
 			erase(data);
 			insert(data);
-			//tree_print();
+			tree_print();
 			balance(Root);
 
 		}
+		if (left_count == right_count)
+		{
+			if (depth(Root->pLeft) != depth(Root->pRight))
+			{
+				int data = Root->Data;
+				erase(data);
+				insert(data);
+				tree_print();
+				balance(Root);
+			}
+		}
+	}
+	void balance1(Element* Root)
+	{
+		if (!Root) return;
+		int left_count = count(Root->pLeft);
+		int right_count = count(Root->pRight);
+		if (abs(left_count - right_count) < 2) return;
+		if (left_count > right_count)
+		{
+			if (left_count > right_count)
+			{
+				if (!Root->pRight) Root->pRight = new	Element(Root->Data);
+				else insert(Root->Data, Root->pRight);
+				Root->Data = maxValue(Root->pLeft);
+				Root->pLeft = erase(maxValue(Root->pLeft), Root->pLeft);
+			}
+		}
+		else if(left_count < right_count)
+		{
+			if (!Root->pLeft) Root->pLeft = new	Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = minValue(Root->pRight);
+			Root->pRight = erase(minValue(Root->pRight), Root->pRight);
+		}
+		balance1(Root->pLeft);
+		balance1(Root->pRight);
+		balance1(Root);
 	}
 
 	//void erase(int Data, Element*& Root)
@@ -439,8 +517,6 @@ int main()
 	tree.clear();
 	tree.print();
 #endif // ERASE_CHECK
-	Timer timer;
-	Tree tree;
 
 #ifdef MEASURE_CHECK
 	int n;
@@ -475,9 +551,12 @@ int main()
 	measure("Количество элементов дерева: ", &(Tree::count), tree);
 	measure("Среднее-арифметическое элементов дерева: ", &(Tree::avg), tree);
 	measure("Глубина дерева: ", &(Tree::depth), tree);
+	Timer timer;
+	Tree tree;
 #endif // MEASURE_CHECK
 
-	tree = { 5,1,0,2,8,3,6 };
+#ifdef BALANCE_CHECK
+	tree = { 6,4,3,5,8,10,9 };
 	//tree.insert(3);
 	//tree.insert(1);
 	//tree.insert(4);
@@ -498,5 +577,12 @@ int main()
 	tree.balance();
 	cout << delimiter;
 	tree.tree_print();
+#endif // BALANCE_CHECK
+	Tree tree = { 16,25,32,50,58,64,85};
+	tree.tree_print();
+	tree.balance1();
+	cout << "\n---------------------------------------------------------------\n" << endl;
+	tree.tree_print();
+
 }
 
